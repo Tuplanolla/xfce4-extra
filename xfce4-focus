@@ -1,0 +1,99 @@
+#! /bin/sh
+
+# Focuses the task list windows that
+#  corrsepond to the given indices, in the order they appear.
+# The task list sorting Xfce uses is undocumented, but its source code reveals that
+#  undecidable cases are resolved using decreasing window handle ordering [1] and that
+#  windows with certain flags are skipped altogether [2].
+#
+# [1] xfce/xfce4-panel/tree/plugins/tasklist/tasklist-widget.c
+# [2] libwnck/tasklist.c
+
+# Define the ordering to use.
+WINDOW_TITLE=2
+
+# Define the command for finding commands.
+CHECK="command -v"
+
+# Check whether the GTK+ dialog utility exists and use it for error reporting if it does.
+$CHECK zenity 1>/dev/null 2>/dev/null && { ERROR="zenity --error --text" && INFO="zenity --info --text" ; } || { ERROR=echo && INFO="$ERROR" ; }
+
+# Check whether the Xfce configuration utility exists.
+$CHECK xfconf-query 1>/dev/null 2>/dev/null || { $ERROR "The command \"xfconf-query\" was not found." ; exit 1 ; }
+
+# Get the task list properties.
+PROPERTIES=`xfconf-query -v -c xfce4-panel -l | grep "\stasklist\(\s\|\$\)"` || { $ERROR "No task lists were found." ; exit 1 ; }
+# /plugins/plugin-1                  tasklist
+# /plugins/plugin-3                  tasklist
+
+# Get the task list orders and check whether any of them uses appropriate ordering.
+APPROPRIATE=0
+IFS="
+"
+for PROPERTY in $PROPERTIES
+do
+	IFS=" "
+
+	# Get the task list value.
+	VALUE=`echo "$PROPERTY" | cut -d " " -f 1`
+	# /plugins/plugin-1
+
+	# Get the task list ordering.
+	ORDERING=`xfconf-query -c xfce4-panel -p "$VALUE/sort-order"` || { $ERROR "The sort ordering for \"$VALUE\" was not found." ; exit 1 ; }
+	# $WINDOW_TITLE
+
+	# Check whether the ordering is appropriate.
+	test "$ORDERING" -eq "$WINDOW_TITLE" && APPROPRIATE=`expr 1 + "$APPROPRIATE"`
+done
+# 2
+
+# Check whether at least one of the orderings was appropriate.
+test "$APPROPRIATE" -gt 0 || { $ERROR "All task list orderings are inappropriate." ; exit 1 ; }
+
+# Check whether the window manager control utility exists.
+$CHECK wmctrl 1>/dev/null 2>/dev/null || { $ERROR "The command \"wmctrl\" was not found." ; exit 1 ; }
+
+# Get the active desktop
+DESKTOP=`wmctrl -d | grep -o "^[0-9]\+\s\+\*"` || { $ERROR "The active desktop was not found." ; exit 1 ; }
+# 0  * DG: 1680x1050  VP: 0,0  WA: 0,25 1680x1024  Workspace 1
+# 1  - DG: 1680x1050  VP: N/A  WA: 0,25 1680x1024  Workspace 2
+
+# Get the active workspace.
+WORKSPACE=`echo "$DESKTOP" | cut -d " " -f 1`
+# 0
+
+# Get the windows on the active workspace and sort them by their titles.
+HANDLES=`wmctrl -l | grep "^\S\+\s\+$WORKSPACE" | LC_ALL=C sort -s -f -t " " -k 4 -k 1,1r | cut -d " " -f 1`
+# 0x01000004 -1 p5q xfce4-panel
+# 0x04000004  0 p5q Terminal
+
+# Check whether the X property display utility exists.
+$CHECK xprop 1>/dev/null 2>/dev/null || { $ERROR "The command \"xprop\" was not found." ; exit 1 ; }
+
+# Find the windows that are not skipped.
+WINDOWS=""
+COUNT=0
+IFS="
+"
+for HANDLE in $HANDLES
+do
+	IFS=" "
+
+	xprop -id "$HANDLE" _NET_WM_STATE | grep _NET_WM_STATE_SKIP_TASKBAR || { WINDOWS="$WINDOWS $HANDLE" && COUNT=`expr 1 + "$COUNT"` ; }
+done
+WINDOWS=`echo "$WINDOWS" | cut -c 2-`
+# 0x01000004 0x04000004
+
+# Print the usage summary if no arguments are given.
+test "$#" -gt 0 || { $INFO "Usage: xfce4-focus (index) (another index) (...)" ; exit 1 ; }
+
+# Find the windows to focus and focus them.
+while test "$#" -gt 0
+do
+	# Suppress errors due to wrong arguments by default.
+	test "$1" -gt 0 -a "$1" -le "$COUNT" 1>/dev/null 2>/dev/null && WINDOW=`echo "$WINDOWS" | cut -d " " -f "$1"` && wmctrl -i -a "$WINDOW" # || { $ERROR "Focusing the window \"$1\" failed." ; exit 1 ; }
+	shift
+done
+
+# Success!
+exit 0
