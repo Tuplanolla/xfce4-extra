@@ -3,7 +3,7 @@
 # Moves the currently focused window to
 #  the given position on the edge of the screen or to
 #  the very center.
-# The positions can be combinations of up, down, left and right.
+# The positions can be combinations of center, up, down, left and right.
 # Dimensions of window decorations and edges reserved by panels are
 #  taken into account when calculating the positions.
 # Errors due to wrong arguments are not ignored by default, but
@@ -71,11 +71,17 @@ test "$#" -gt 0 || { $INFO "Usage: xfce4-move (position) (another position) (...
 # Find how to move the window.
 MAXIMUM_X=`expr "$SCREEN_WIDTH" - "$WINDOW_WIDTH" - "$DECORATION_LEFT" - "$DECORATION_RIGHT"`
 MAXIMUM_Y=`expr "$SCREEN_HEIGHT" - "$WINDOW_HEIGHT" - "$DECORATION_TOP" - "$DECORATION_BOTTOM"`
-X=`expr "$MAXIMUM_X" / 2`
-Y=`expr "$MAXIMUM_Y" / 2`
+CENTER_X=`expr "$MAXIMUM_X" / 2`
+CENTER_Y=`expr "$MAXIMUM_Y" / 2`
+X=-1
+Y=-1
 while test "$#" -gt 0
 do
 	case "$1" in
+		center)
+			X="$CENTER_X"
+			Y="$CENTER_Y"
+			;;
 		left)
 			X=0
 			;;
