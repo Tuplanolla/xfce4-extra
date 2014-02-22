@@ -1,8 +1,6 @@
 #! /bin/sh
 
-# Moves the currently focused window to
-#  the given position on the edge of the screen or to
-#  the very center.
+# Moves the currently focused window to the given position.
 # The positions can be combinations of center, up, down, left and right.
 # Dimensions of window decorations and edges reserved by panels are
 #  taken into account when calculating the positions.

@@ -2,7 +2,7 @@
 
 # Focuses the Xfce task list windows that
 #  corrsepond to the given indices, in the order they appear.
-# The indices start from 1 and end eventually.
+# The indices start from 1 and should end eventually.
 # It is necessary that
 #  at least one task list exists and that
 #  it uses a certain ordering.
