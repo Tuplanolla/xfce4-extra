@@ -1,0 +1,93 @@
+#! /bin/sh
+
+# Moves the currently focused window to
+#  the given position on the edge of the screen or to
+#  the very center.
+# The dimensions of window decorations and edges reserved by panels are
+#  taken into account.
+
+# Check whether the GTK+ dialog utility exists and use it for error reporting if it does.
+$CHECK zenity 1>/dev/null 2>/dev/null && { ERROR="zenity --error --text" && INFO="zenity --info --text" ; } || { ERROR=echo && INFO="$ERROR" ; }
+
+# Check whether the X window information utility exists.
+$CHECK xwininfo 1>/dev/null 2>/dev/null || { $ERROR "The command \"xwininfo\" was not found." ; exit 1 ; }
+
+# Get the screen geometry.
+# xwininfo: Window id: 0x1e4 (the root window) (has no name)
+#
+#   Absolute upper-left X:  0
+#   Absolute upper-left Y:  0
+#   Relative upper-left X:  0
+#   Relative upper-left Y:  0
+#   Width: 1680
+#   Height: 1050
+SCREEN_GEOMETRY=`xwininfo -root`
+
+# Find the screen size.
+SCREEN_WIDTH=`echo "$SCREEN_GEOMETRY" | grep -i "^\s*width" | cut -d : -f 2 | tr -d " "`
+SCREEN_HEIGHT=`echo "$SCREEN_GEOMETRY" | grep -i "^\s*height" | cut -d : -f 2 | tr -d " "`
+
+# Check whether the X property displayer exists.
+$CHECK xprop 1>/dev/null 2>/dev/null || { $ERROR "The command \"xprop\" was not found." ; exit 1 ; }
+
+# Get the window to move.
+# 0x4000004
+WINDOW=`xprop -root _NET_ACTIVE_WINDOW | cut -d # -f 2 | cut -d , -f 1 | tr -d " "`
+
+# Get the window geometry.
+# xwininfo: Window id: 0x4000004 "Terminal"
+#
+#   Absolute upper-left X:  1024
+#   Absolute upper-left Y:  48
+#   Relative upper-left X:  2
+#   Relative upper-left Y:  24
+#   Width: 640
+#   Height: 480
+WINDOW_GEOMETRY=`xwininfo -id "$WINDOW"`
+
+# Find the window size.
+WINDOW_WIDTH=`echo "$WINDOW_GEOMETRY" | grep -i "^\s*width" | cut -d : -f 2 | tr -d " "`
+WINDOW_HEIGHT=`echo "$WINDOW_GEOMETRY" | grep -i "^\s*height" | cut -d : -f 2 | tr -d " "`
+
+# Get the decoration geometry.
+# _NET_FRAME_EXTENTS(CARDINAL) = 1, 1, 22, 4
+DECORATION_GEOMETRY=`xprop -id "$WINDOW" _NET_FRAME_EXTENTS`
+
+# Find the decoration size.
+DECORATION_LEFT=`echo "$DECORATION_GEOMETRY" | cut -d = -f 2 | cut -d , -f 1 | tr -d " "`
+DECORATION_RIGHT=`echo "$DECORATION_GEOMETRY" | cut -d = -f 2 | cut -d , -f 2 | tr -d " "`
+DECORATION_TOP=`echo "$DECORATION_GEOMETRY" | cut -d = -f 2 | cut -d , -f 3 | tr -d " "`
+DECORATION_BOTTOM=`echo "$DECORATION_GEOMETRY" | cut -d = -f 2 | cut -d , -f 4 | tr -d " "`
+
+# Find how to move the window.
+MAXIMUM_X=`expr "$SCREEN_WIDTH" - "$WINDOW_WIDTH" - "$DECORATION_LEFT" - "$DECORATION_RIGHT"`
+MAXIMUM_Y=`expr "$SCREEN_HEIGHT" - "$WINDOW_HEIGHT" - "$DECORATION_TOP" - "$DECORATION_BOTTOM"`
+X=`expr "$MAXIMUM_X" / 2`
+Y=`expr "$MAXIMUM_Y" / 2`
+while test "$#" -gt 0
+do
+	case "$1" in
+		left)
+			X=0
+			;;
+		right)
+			X="$MAXIMUM_X"
+			;;
+		up)
+			Y=0
+			;;
+		down)
+			Y="$MAXIMUM_Y"
+			;;
+	esac
+	shift
+done
+
+# Check whether the window manager control utility exists.
+$CHECK wmctrl 1>/dev/null 2>/dev/null || { $ERROR "The command \"wmctrl\" was not found." ; exit 1 ; }
+
+# Move the window.
+wmctrl -r :ACTIVE: -e "0,$X,$Y,-1,-1" || { $ERROR "Moving the active window failed." ; exit 1 ; }
+
+# Success!
+exit 0
