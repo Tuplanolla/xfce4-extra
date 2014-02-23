@@ -5,7 +5,7 @@ This small project extends its basic functionality.
 
 ## Installation
 
-Copy the scripts into a suitable location.
+Installation involves copying the scripts into a suitable location.
 
 	[user@computer ~]$ sudo cp -i xfce4-* /usr/local/bin
 
@@ -70,27 +70,48 @@ Shortcut keys can be set
 
 The following configuration allows using the Super key with a number to focus a window.
 
-	<property name="&lt;Super&gt;1" type="string" value="xfce4-focus 1" />
-	<property name="&lt;Super&gt;2" type="string" value="xfce4-focus 2" />
-	<property name="&lt;Super&gt;3" type="string" value="xfce4-focus 3" />
-	<property name="&lt;Super&gt;4" type="string" value="xfce4-focus 4" />
-	<property name="&lt;Super&gt;5" type="string" value="xfce4-focus 5" />
-	<property name="&lt;Super&gt;6" type="string" value="xfce4-focus 6" />
-	<property name="&lt;Super&gt;7" type="string" value="xfce4-focus 7" />
-	<property name="&lt;Super&gt;8" type="string" value="xfce4-focus 8" />
-	<property name="&lt;Super&gt;9" type="string" value="xfce4-focus 9" />
+	<?xml version="1.0" encoding="UTF-8"?>
+	<channel name="xfce4-keyboard-shortcuts" version="1.0">
+		<property name="commands" type="empty">
+			<property name="default" type="empty">
+				<property name="&lt;Super&gt;1" type="string" value="xfce4-focus 1" />
+				<property name="&lt;Super&gt;2" type="string" value="xfce4-focus 2" />
+				<property name="&lt;Super&gt;3" type="string" value="xfce4-focus 3" />
+				<property name="&lt;Super&gt;4" type="string" value="xfce4-focus 4" />
+				<property name="&lt;Super&gt;5" type="string" value="xfce4-focus 5" />
+				<property name="&lt;Super&gt;6" type="string" value="xfce4-focus 6" />
+				<property name="&lt;Super&gt;7" type="string" value="xfce4-focus 7" />
+				<property name="&lt;Super&gt;8" type="string" value="xfce4-focus 8" />
+				<property name="&lt;Super&gt;9" type="string" value="xfce4-focus 9" />
+			</property>
+		</property>
+	</channel>
 
 ### Moving a Window
 
 The following configuration allows using the Super key with a letter, arranged in a matrix, to move a window.
 
+	<?xml version="1.0" encoding="UTF-8"?>
+	<channel name="xfce4-keyboard-shortcuts" version="1.0">
+		<property name="commands" type="empty">
+			<property name="default" type="empty">
+				<property name="&lt;Super&gt;q" type="string" value="xfce4-move up left />
+				<property name="&lt;Super&gt;w" type="string" value="xfce4-move center up />
+				<property name="&lt;Super&gt;e" type="string" value="xfce4-move up right />
+				<property name="&lt;Super&gt;a" type="string" value="xfce4-move center left />
+				<property name="&lt;Super&gt;s" type="string" value="xfce4-move center />
+				<property name="&lt;Super&gt;d" type="string" value="xfce4-move center right />
+				<property name="&lt;Super&gt;z" type="string" value="xfce4-move down left />
+				<property name="&lt;Super&gt;x" type="string" value="xfce4-move center down />
+				<property name="&lt;Super&gt;c" type="string" value="xfce4-move down right />
+			</property>
+		</property>
+	</channel>
 
-	<property name="&lt;Super&gt;q" type="string" value="xfce4-move up left />
-	<property name="&lt;Super&gt;w" type="string" value="xfce4-move center up />
-	<property name="&lt;Super&gt;e" type="string" value="xfce4-move up right />
-	<property name="&lt;Super&gt;a" type="string" value="xfce4-move center left />
-	<property name="&lt;Super&gt;s" type="string" value="xfce4-move center />
-	<property name="&lt;Super&gt;d" type="string" value="xfce4-move center right />
-	<property name="&lt;Super&gt;z" type="string" value="xfce4-move down left />
-	<property name="&lt;Super&gt;x" type="string" value="xfce4-move center down />
-	<property name="&lt;Super&gt;c" type="string" value="xfce4-move down right />
+## Development
+
+This project is in usable condition, but develop further over time.
+
+### Contributing
+
+Contributions are welcome.
