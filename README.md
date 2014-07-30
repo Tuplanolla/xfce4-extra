@@ -1,6 +1,7 @@
 # Extra Features for Xfce Version 4
 
-Xfce is a lightweight desktop environment for operating systems of the Unix variety.
+Xfce is a lightweight desktop environment for
+ operating systems of the Unix variety.
 This small project extends its basic functionality.
 
 ## Installation
@@ -26,11 +27,9 @@ They might also have other dependencies.
 ### Focusing a Window
 
 The script `xfce4-focus` focuses task list windows based on their indices.
-It requires `xfce4-panel` with at least one task list that uses window title ordering.
-It also depends on
- `xfconf-query`,
- `wmctrl` and
- `xprop`.
+It requires `xfce4-panel` with at least one task list that
+ uses window title ordering.
+It also depends on `xfconf-query`, `wmctrl` and `xprop`.
 
 Assume there are four windows open in the currently active workspace.
 It's easy to bring the second window on the task bar to the top
@@ -43,12 +42,11 @@ It's easy to bring the second window on the task bar to the top
 
 ### Moving a Window
 
-The script `xfce4-move` moves the currently active window to a precise position on the screen.
-The position can be specified by using a combination of `center`, `up`, `down`, `left` and `right`.
-It depends on
- `xwininfo`
- `xprop` and
- `wmctrl`.
+The script `xfce4-move` moves the currently active window to
+ a precise position on the screen.
+The position can be specified by
+ using a combination of `center`, `up`, `down`, `left` and `right`.
+It depends on `xwininfo` `xprop` and `wmctrl`.
 
 Centering a window
 
@@ -62,13 +60,13 @@ Centering a window
 
 ## Integration
 
-Shortcut keys can be set
- in the Keyboard menu or
- by editing `~/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml`.
+Shortcut keys can be set in the Keyboard menu or by
+ editing `~/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml`.
 
 ### Focusing a Window
 
-The following configuration allows using the Super key with a number to focus a window.
+The following configuration allows using the Super key with
+ a number to focus a window.
 
 	<?xml version="1.0" encoding="UTF-8"?>
 	<channel name="xfce4-keyboard-shortcuts" version="1.0">
@@ -89,7 +87,8 @@ The following configuration allows using the Super key with a number to focus a 
 
 ### Moving a Window
 
-The following configuration allows using the Super key with a letter, arranged in a matrix, to move a window.
+The following configuration allows using the Super key with
+ a letter, arranged in a matrix, to move a window.
 
 	<?xml version="1.0" encoding="UTF-8"?>
 	<channel name="xfce4-keyboard-shortcuts" version="1.0">
@@ -110,7 +109,7 @@ The following configuration allows using the Super key with a letter, arranged i
 
 ## Development
 
-This project is in usable condition, but develop further over time.
+This project is in usable condition, but may develop further over time.
 
 ### Contributing
 
