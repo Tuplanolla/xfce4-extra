@@ -8,7 +8,7 @@ This small project extends its basic functionality.
 
 Installation involves copying the scripts into a suitable location.
 
-	[user@computer ~]$ sudo cp -i xfce4-* /usr/local/bin
+	[user@computer:~]$ sudo cp -i xfce4-* /usr/local/bin
 
 ## Configuration
 
@@ -34,11 +34,11 @@ It also depends on `xfconf-query`, `wmctrl` and `xprop`.
 Assume there are four windows open in the currently active workspace.
 It's easy to bring the second window on the task bar to the top
 
-	[user@computer ~]$ xfce4-focus 2
+	[user@computer:~]$ xfce4-focus 2
 
  or stack all of the windows, putting the first one on the top.
 
-	[user@computer ~]$ xfce4-focus 3 2 4 1
+	[user@computer:~]$ xfce4-focus 3 2 4 1
 
 ### Moving a Window
 
@@ -50,11 +50,11 @@ It depends on `xwininfo` `xprop` and `wmctrl`.
 
 Centering a window
 
-	[user@computer ~]$ xfce4-move center
+	[user@computer:~]$ xfce4-move center
 
  or moving it to the bottom right corner of the screen is trivial
 
-	[user@computer ~]$ xfce4-move down right
+	[user@computer:~]$ xfce4-move down right
 
  and works even if there's a task bar or another panel in the way.
 
